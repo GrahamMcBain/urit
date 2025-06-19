@@ -6,8 +6,13 @@ import { Providers } from "~/app/providers";
 import { APP_NAME, APP_DESCRIPTION } from "~/lib/constants";
 
 export const metadata: Metadata = {
-  title: APP_NAME,
+  title: `🫱 Urit`,
   description: APP_DESCRIPTION,
+  icons: {
+    icon: '/icon.svg',
+    apple: '/icon.svg',
+    shortcut: '/icon.svg',
+  },
 };
 
 export default async function RootLayout({

@@ -7,9 +7,9 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: APP_NAME,
+    title: `🫱 Urit`,
     openGraph: {
-      title: APP_NAME,
+      title: `🫱 Urit`,
       description: APP_DESCRIPTION,
       images: [APP_OG_IMAGE_URL],
     },

@@ -51,7 +51,7 @@ export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
       title: APP_BUTTON_TEXT,
       action: {
         type: "launch_frame",
-        name: APP_NAME,
+        name: `🫱 Urit`,
         url: APP_URL,
         splashImageUrl: APP_SPLASH_URL,
         iconUrl: APP_ICON_URL,
@@ -123,7 +123,7 @@ export async function getFarcasterMetadata(): Promise<MiniAppManifest> {
     accountAssociation,
     frame: {
       version: "1",
-      name: APP_NAME ?? "Neynar Starter Kit",
+      name: `🫱 Urit` ?? "🫱 Urit Game",
       iconUrl: APP_ICON_URL,
       homeUrl: APP_URL,
       imageUrl: APP_OG_IMAGE_URL,
