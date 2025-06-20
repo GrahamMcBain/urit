@@ -27,7 +27,13 @@ export async function GET(request: NextRequest) {
     const data = await response.json();
     
     // Transform the response to a simpler format
-    const users = data.result?.users?.map((user: any) => ({
+    const users = data.result?.users?.map((user: {
+      fid: number;
+      username: string;
+      display_name: string;
+      pfp_url?: string;
+      follower_count?: number;
+    }) => ({
       fid: user.fid,
       username: user.username,
       display_name: user.display_name,
