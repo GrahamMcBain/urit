@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
-import { Button } from "~/components/ui/Button";
-import { Player, LeaderboardEntry } from "~/lib/types";
-import { isSuperAdmin } from "~/lib/config";
+import { Button } from "./ui/Button";
+import { Player, LeaderboardEntry } from "../lib/types";
+import { isSuperAdmin } from "../lib/config";
 
 interface TagGameProps {
   title?: string;

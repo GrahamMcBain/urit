@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import TagGame from "./TagGame";
-import { Header } from "~/components/ui/Header";
-import { Footer } from "~/components/ui/Footer";
+import { Header } from "./ui/Header";
+import { Footer } from "./ui/Footer";
 
 export type Tab = 'home' | 'actions' | 'context' | 'wallet';
 
