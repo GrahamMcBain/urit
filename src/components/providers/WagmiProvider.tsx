@@ -3,7 +3,7 @@ import { base, degen, mainnet, optimism, unichain, celo } from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { farcasterFrame } from "@farcaster/frame-wagmi-connector";
 import { coinbaseWallet, metaMask } from 'wagmi/connectors';
-import { APP_NAME, APP_ICON_URL, APP_URL } from "~/lib/constants";
+import { APP_NAME, APP_ICON_URL, APP_URL } from "../../lib/constants";
 import { useEffect, useState } from "react";
 import { useConnect, useAccount } from "wagmi";
 import React from "react";
