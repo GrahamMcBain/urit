@@ -34,12 +34,19 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
   // Check if current user is super admin
   const isAdmin = context?.user?.fid ? isSuperAdmin(context.user.fid) : false;
 
+
+
   // Fetch current game state
   const fetchGameState = useCallback(async () => {
     try {
       const response = await fetch('/api/tag');
       const data = await response.json();
       setCurrentlyTagged(data.currentlyTagged);
+      
+      // If the game was reset, show message
+      if (data.wasReset) {
+        setMessage("The game has been reset for a new day!");
+      }
     } catch (error) {
       console.error('Failed to fetch game state:', error);
     }
@@ -439,6 +446,8 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
             <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
               <li>• When you're tagged, you must tag someone else quickly</li>
               <li>• Only the currently tagged person can tag others</li>
+              <li>• You can only tag a person once per 24-hour period</li>
+              <li>• The game resets every 24 hours</li>
               <li>• The goal is to spend the least time being tagged</li>
               <li>• Check the leaderboard to see who's winning!</li>
             </ul>

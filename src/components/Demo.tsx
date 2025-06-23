@@ -27,7 +27,12 @@ export default function Demo(
   useEffect(() => {
     console.log("isSDKLoaded", isSDKLoaded);
     console.log("context", context);
-  }, [context, isSDKLoaded]);
+    
+    // Notify Farcaster container that the app is ready to be displayed
+    if (isSDKLoaded && actions.ready) {
+      actions.ready();
+    }
+  }, [context, isSDKLoaded, actions]);
 
   // Fetch Neynar user object when context is available
   useEffect(() => {

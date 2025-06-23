@@ -13,12 +13,14 @@ export interface Player {
   dailyPoints: number; // points earned today (up to 100k per day)
   lastPointsDate: string; // date string (YYYY-MM-DD) when points were last earned
   totalPoints: number; // lifetime total points
+  lastTaggedDate?: string; // date string (YYYY-MM-DD) when player was last tagged
 }
 
 export interface GameState {
   currentlyTagged?: number; // fid of currently tagged player
   lastTagTime?: number; // timestamp of last tag
   gameStartTime: number; // when the game started
+  lastResetTime: number; // when the game was last reset
   totalPlayers: number;
 }
 

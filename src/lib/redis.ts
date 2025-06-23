@@ -72,8 +72,26 @@ export class GameService {
     const state = await redis.get<GameState>(REDIS_KEYS.GAME_STATE);
     return state || {
       gameStartTime: Date.now(),
+      lastResetTime: Date.now(),
       totalPlayers: 0,
     };
+  }
+  
+  // Check if game needs to be reset (every 24 hours)
+  async checkAndResetGame(): Promise<boolean> {
+    const state = await this.getGameState();
+    const now = Date.now();
+    const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    
+    // Reset if it's been more than 24 hours since the last reset
+    if (state.lastResetTime && now - state.lastResetTime > twentyFourHours) {
+      // Reset the game
+      await redis.del(REDIS_KEYS.CURRENTLY_TAGGED);
+      await this.updateGameState({ lastResetTime: now });
+      return true;
+    }
+    
+    return false;
   }
 
   async updateGameState(updates: Partial<GameState>): Promise<GameState> {
@@ -101,6 +119,16 @@ export class GameService {
       return { 
         success: false, 
         message: `Only ${taggedPlayer?.displayName || 'the currently tagged player'} can tag someone right now!` 
+      };
+    }
+    
+    // Check if the player being tagged has already been tagged today
+    const taggedPlayer = await this.getPlayer(taggedFid);
+    const today = getTodayString();
+    if (taggedPlayer?.lastTaggedDate === today && !isAdminOverride) {
+      return {
+        success: false,
+        message: `${taggedPlayer.displayName} has already been tagged today! Try someone else.`
       };
     }
 
@@ -156,6 +184,7 @@ export class GameService {
       taggedAt: now,
       taggedBy: taggerFid,
       timesTagged: (tagged?.timesTagged || 0) + 1,
+      lastTaggedDate: getTodayString(), // Add the date they were tagged
     });
 
     // Update currently tagged
