@@ -27,10 +27,17 @@ export default function Demo(
   useEffect(() => {
     console.log("isSDKLoaded", isSDKLoaded);
     console.log("context", context);
+    console.log("actions", actions);
     
     // Notify Farcaster container that the app is ready to be displayed
-    if (isSDKLoaded && actions.ready) {
-      actions.ready();
+    if (isSDKLoaded) {
+      console.log("SDK loaded, calling ready");
+      if (actions && actions.ready) {
+        console.log("Calling actions.ready()");
+        actions.ready();
+      } else {
+        console.log("actions.ready not available");
+      }
     }
   }, [context, isSDKLoaded, actions]);
 
@@ -79,7 +86,15 @@ export default function Demo(
   }, [context?.user, neynarUser]);
 
   if (!isSDKLoaded) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen p-4">
+        <div className="text-center">
+          <div className="animate-spin h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p>Loading Farcaster SDK...</p>
+          <p className="text-sm text-gray-500 mt-2">If this takes too long, try refreshing</p>
+        </div>
+      </div>
+    );
   }
 
   return (

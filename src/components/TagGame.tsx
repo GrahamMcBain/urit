@@ -30,6 +30,7 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
   const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
   const [selectedUser, setSelectedUser] = useState<SearchUser | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [apiError, setApiError] = useState<string>("");
 
   // Check if current user is super admin
   const isAdmin = context?.user?.fid ? isSuperAdmin(context.user.fid) : false;
@@ -40,8 +41,12 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
   const fetchGameState = useCallback(async () => {
     try {
       const response = await fetch('/api/tag');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       const data = await response.json();
       setCurrentlyTagged(data.currentlyTagged);
+      setApiError(""); // Clear any previous errors
       
       // If the game was reset, show message
       if (data.wasReset) {
@@ -49,6 +54,7 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
       }
     } catch (error) {
       console.error('Failed to fetch game state:', error);
+      setApiError(`Failed to connect to game API: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }, []);
 
@@ -249,6 +255,14 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
   return (
     <div className="max-w-md mx-auto p-4 space-y-6">
       <h1 className="text-3xl font-bold text-center">🫱 {title}</h1>
+      
+      {/* API Error Display */}
+      {apiError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <p className="font-bold">Connection Error</p>
+          <p className="text-sm">{apiError}</p>
+        </div>
+      )}
       
       {/* Tab Navigation */}
       <div className="flex space-x-2 border-b">
