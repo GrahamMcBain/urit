@@ -20,7 +20,7 @@ export function Header({ neynarUser }: HeaderProps) {
   return (
     <div className="relative">
       <div 
-        className="mb-1 py-2 px-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-between border-[3px] border-double border-purple-500"
+        className="mb-1 py-2 px-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-between border-[3px] border-double border-primary-500"
       >
         <div className="flex items-center gap-2">
           <img 
@@ -44,7 +44,7 @@ export function Header({ neynarUser }: HeaderProps) {
               <img 
                 src={context.user.pfpUrl} 
                 alt="Profile" 
-                className="w-10 h-10 rounded-full border-2 border-purple-500"
+                className="w-10 h-10 rounded-full border-2 border-primary-500"
               />
             )}
           </div>
@@ -53,7 +53,7 @@ export function Header({ neynarUser }: HeaderProps) {
       {context?.user && (
         <>
           {!hasClickedPfp && (
-            <div className="absolute right-0 -bottom-6 text-xs text-purple-500 flex items-center justify-end gap-1 pr-2">
+            <div className="absolute right-0 -bottom-6 text-xs text-primary-600 flex items-center justify-end gap-1 pr-2">
               <span className="text-[10px]">↑</span> Click PFP! <span className="text-[10px]">↑</span>
             </div>
           )}

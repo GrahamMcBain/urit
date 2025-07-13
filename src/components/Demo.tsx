@@ -89,7 +89,7 @@ export default function Demo(
     return (
       <div className="flex flex-col items-center justify-center h-screen p-4">
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-2 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin h-8 w-8 border-2 border-primary-500 border-t-transparent rounded-full mx-auto mb-4"></div>
           <p>Loading Farcaster SDK...</p>
           <p className="text-sm text-gray-500 mt-2">If this takes too long, try refreshing</p>
         </div>
@@ -115,7 +115,7 @@ export default function Demo(
 
         {activeTab === 'actions' && (
           <div className="space-y-3 px-6 w-full max-w-md mx-auto">
-            <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4 text-center">
+            <div className="bg-primary-50 dark:bg-primary-900 rounded-lg p-4 text-center">
               <h2 className="font-bold mb-2">Share Tag Game</h2>
               <p className="text-sm mb-3">Invite friends to play Tag with you!</p>
               <button
@@ -123,7 +123,7 @@ export default function Demo(
                   const shareUrl = `${process.env.NEXT_PUBLIC_URL}`;
                   await navigator.clipboard.writeText(shareUrl);
                 }}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                className="bg-primary-500 text-white px-4 py-2 rounded-lg"
               >
                 Copy Game Link
               </button>

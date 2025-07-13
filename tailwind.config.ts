@@ -11,7 +11,31 @@ export default {
   	extend: {
   		colors: {
   			background: 'var(--background)',
-  			foreground: 'var(--foreground)'
+  			foreground: 'var(--foreground)',
+  			primary: {
+  				50: '#f0fdf4',
+  				100: '#dcfce7',
+  				200: '#bbf7d0',
+  				300: '#86efac',
+  				400: '#4ade80',
+  				500: '#8BC34A', // Main Tag green
+  				600: '#7CB342',
+  				700: '#689F38',
+  				800: '#558B2F',
+  				900: '#33691E',
+  			},
+  			accent: {
+  				50: '#f7fdf5',
+  				100: '#edfae6',
+  				200: '#dcf5ce',
+  				300: '#c4eca8',
+  				400: '#a6dc7c',
+  				500: '#8BC34A', // Same as primary for consistency
+  				600: '#7CB342',
+  				700: '#689F38',
+  				800: '#558B2F',
+  				900: '#33691E',
+  			}
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

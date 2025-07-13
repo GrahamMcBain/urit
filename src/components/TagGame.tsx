@@ -285,7 +285,7 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
           onClick={() => setActiveTab('game')}
           className={`px-4 py-2 font-medium ${
             activeTab === 'game'
-              ? 'border-b-2 border-blue-500 text-blue-600'
+              ? 'border-b-2 border-primary-500 text-primary-600'
               : 'text-gray-500'
           }`}
         >
@@ -295,7 +295,7 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
           onClick={() => setActiveTab('leaderboard')}
           className={`px-4 py-2 font-medium ${
             activeTab === 'leaderboard'
-              ? 'border-b-2 border-blue-500 text-blue-600'
+              ? 'border-b-2 border-primary-500 text-primary-600'
               : 'text-gray-500'
           }`}
         >
@@ -363,18 +363,18 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search for a user by username..."
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                   />
                   {isSearching && (
                     <div className="absolute right-3 top-2.5">
-                      <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+                      <div className="animate-spin h-5 w-5 border-2 border-primary-500 border-t-transparent rounded-full"></div>
                     </div>
                   )}
                 </div>
 
                 {/* Selected User */}
                 {selectedUser && (
-                  <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3 border-2 border-blue-300">
+                  <div className="bg-primary-50 dark:bg-primary-900 rounded-lg p-3 border-2 border-primary-300">
                     <div className="flex items-center space-x-3">
                       {selectedUser.pfp_url && (
                         <img 
@@ -470,9 +470,9 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
           )}
 
           {/* Game Rules */}
-          <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
-            <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">How to Play:</h3>
-            <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+          <div className="bg-primary-50 dark:bg-primary-900 rounded-lg p-4">
+            <h3 className="font-bold text-primary-900 dark:text-primary-100 mb-2">How to Play:</h3>
+            <ul className="text-sm text-primary-800 dark:text-primary-200 space-y-1">
               <li>• When you're tagged, you must tag someone else quickly</li>
               <li>• Tag people in this app OR by casting "@tag @username" on Farcaster</li>
               <li>• Only the currently tagged person can tag others</li>
@@ -491,13 +491,13 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
         <p className="text-sm text-center text-gray-600 dark:text-gray-400">
         Ranked by daily points (faster untagging = more points)
         </p>
-            <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3 text-xs">
+            <div className="bg-primary-50 dark:bg-primary-900 rounded-lg p-3 text-xs">
               <p className="font-bold mb-1">Point System:</p>
               <p>• Under 10 seconds: 100,000 points</p>
               <p>• 10-60 seconds: 50,000 points</p>
               <p>• 1-5 minutes: 25,000 points</p>
               <p>• 5+ minutes: decreasing points</p>
-              <p className="text-blue-700 dark:text-blue-300 mt-1">Max 100k points per day!</p>
+              <p className="text-primary-700 dark:text-primary-300 mt-1">Max 100k points per day!</p>
             </div>
           
           {leaderboard.length === 0 ? (
