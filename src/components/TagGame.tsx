@@ -220,6 +220,14 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
             targetUrl: `${process.env.NEXT_PUBLIC_URL}`,
           });
         }
+        
+        // Compose a cast to share the tag
+        if (actions.openComposer) {
+          const castText = `I just tagged @${selectedUser.username} in Urit! 🫱\n\nYour turn to tag someone else quickly! ⚡\n\nPlay at ${process.env.NEXT_PUBLIC_URL}`;
+          actions.openComposer({
+            text: castText,
+          });
+        }
       } else {
         setMessage(data.error || "Failed to tag friend");
       }
@@ -459,6 +467,7 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
             <h3 className="font-bold text-blue-900 dark:text-blue-100 mb-2">How to Play:</h3>
             <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
               <li>• When you're tagged, you must tag someone else quickly</li>
+              <li>• Tag people in this app OR by casting "@tag @username" on Farcaster</li>
               <li>• Only the currently tagged person can tag others</li>
               <li>• You can only tag a person once per 24-hour period</li>
               <li>• The game resets every 24 hours</li>
