@@ -6,7 +6,7 @@ import { Providers } from "./providers";
 import { APP_NAME, APP_DESCRIPTION } from "../lib/constants";
 
 export const metadata: Metadata = {
-  title: `🫱 Urit`,
+  title: `Tag - Play the Game`,
   description: APP_DESCRIPTION,
   icons: {
     icon: '/icon.svg',

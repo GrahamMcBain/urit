@@ -18,7 +18,7 @@ interface SearchUser {
   follower_count?: number;
 }
 
-export default function TagGame({ title = "Urit" }: TagGameProps) {
+export default function TagGame({ title = "Tag" }: TagGameProps) {
   const { context, actions } = useMiniApp();
   const [currentlyTagged, setCurrentlyTagged] = useState<Player | null>(null);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
@@ -223,7 +223,7 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
         
         // Compose a cast to share the tag
         if (actions.openComposer) {
-          const castText = `I just tagged @${selectedUser.username} in Urit! 🫱\n\nYour turn to tag someone else quickly! ⚡\n\nPlay at ${process.env.NEXT_PUBLIC_URL}`;
+          const castText = `I just tagged @${selectedUser.username} in Tag! 🫱\n\nYour turn to tag someone else quickly! ⚡\n\nPlay at ${process.env.NEXT_PUBLIC_URL}`;
           actions.openComposer({
             text: castText,
           });
@@ -262,7 +262,14 @@ export default function TagGame({ title = "Urit" }: TagGameProps) {
 
   return (
     <div className="max-w-md mx-auto p-4 space-y-6">
-      <h1 className="text-3xl font-bold text-center">🫱 {title}</h1>
+      <div className="flex items-center justify-center gap-3 mb-2">
+        <img 
+          src="/icon.png" 
+          alt="Tag Logo" 
+          className="w-12 h-12"
+        />
+        <h1 className="text-3xl font-bold">{title}</h1>
+      </div>
       
       {/* API Error Display */}
       {apiError && (

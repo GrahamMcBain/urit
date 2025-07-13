@@ -14,7 +14,7 @@ interface NeynarUser {
 }
 
 export default function Demo(
-  { title }: { title?: string } = { title: "Urit" }
+  { title }: { title?: string } = { title: "Tag" }
 ) {
   const {
     isSDKLoaded,
@@ -116,8 +116,8 @@ export default function Demo(
         {activeTab === 'actions' && (
           <div className="space-y-3 px-6 w-full max-w-md mx-auto">
             <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4 text-center">
-              <h2 className="font-bold mb-2">Share Urit Game</h2>
-              <p className="text-sm mb-3">Invite friends to play Urit with you!</p>
+              <h2 className="font-bold mb-2">Share Tag Game</h2>
+              <p className="text-sm mb-3">Invite friends to play Tag with you!</p>
               <button
                 onClick={async () => {
                   const shareUrl = `${process.env.NEXT_PUBLIC_URL}`;

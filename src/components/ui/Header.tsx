@@ -22,8 +22,15 @@ export function Header({ neynarUser }: HeaderProps) {
       <div 
         className="mb-1 py-2 px-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-between border-[3px] border-double border-purple-500"
       >
-        <div className="text-lg font-light">
-          Welcome to {APP_NAME}!
+        <div className="flex items-center gap-2">
+          <img 
+            src="/icon.png" 
+            alt="Tag Logo" 
+            className="w-8 h-8"
+          />
+          <div className="text-lg font-light">
+            Welcome to {APP_NAME}!
+          </div>
         </div>
         {context?.user && (
           <div 
