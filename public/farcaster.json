@@ -11,7 +11,7 @@
     "imageUrl": "https://playtag.xyz/api/opengraph-image",
     "buttonTitle": "Play Tag",
     "splashImageUrl": "https://playtag.xyz/splash.png",
-    "splashBackgroundColor": "#f0fdf4",
+    "splashBackgroundColor": "#0a0a0a",
     "webhookUrl": "https://playtag.xyz/api/webhook"
   },
   "name": "Tag",
@@ -22,12 +22,14 @@
   "tags": ["game", "social", "farcaster", "tag", "friends", "leaderboard"],
   "tagline": "Tag your friends, climb the leaderboard!",
   "buttonTitle": "Play Tag",
+  "imageUrl": "https://playtag.xyz/preview.png",
+  "heroImageUrl": "https://playtag.xyz/hero.png",
   "ogTitle": "Tag – The Farcaster Friend-Tagging Game",
   "ogDescription": "Play tag with your Farcaster friends! Tag people in the app or mention @tag in casts. Race to untag yourself and climb the leaderboard.",
-  "ogImageUrl": "https://playtag.xyz/api/opengraph-image",
+  "ogImageUrl": "https://playtag.xyz/hero.png",
   "homeUrl": "https://playtag.xyz",
   "webhookUrl": "https://playtag.xyz/api/webhook",
   "splashImageUrl": "https://playtag.xyz/splash.png",
-  "splashBackgroundColor": "#f0fdf4",
+  "splashBackgroundColor": "#0a0a0a",
   "castShareUrl": "https://warpcast.com/~/compose?text=I%20just%20played%20Tag%20on%20Farcaster!%20🫱%20Join%20the%20game%20at%20playtag.xyz"
 }
