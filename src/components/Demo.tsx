@@ -5,6 +5,7 @@ import { useMiniApp } from "@neynar/react";
 import TagGame from "./TagGame";
 import { Header } from "./ui/Header";
 import { Footer } from "./ui/Footer";
+import sdk from "@farcaster/frame-sdk";
 
 export type Tab = 'home' | 'actions' | 'context' | 'wallet';
 
@@ -30,16 +31,66 @@ export default function Demo(
     console.log("actions", actions);
     
     // Notify Farcaster container that the app is ready to be displayed
-    if (isSDKLoaded) {
+    if (isSDKLoaded && actions) {
       console.log("SDK loaded, calling ready");
-      if (actions && actions.ready) {
-        console.log("Calling actions.ready()");
-        actions.ready();
-      } else {
-        console.log("actions.ready not available");
+      try {
+        if (typeof actions.ready === 'function') {
+          console.log("Calling actions.ready()");
+          actions.ready();
+        } else {
+          console.log("actions.ready is not a function:", typeof actions.ready);
+          // Fallback: try calling ready on the SDK directly
+          try {
+            console.log("Trying sdk.actions.ready()");
+            sdk.actions.ready();
+          } catch (sdkError) {
+            console.error("SDK ready failed:", sdkError);
+            // Final fallback: post message directly
+            if (typeof window !== 'undefined' && (window as any).parent) {
+              (window as any).parent.postMessage({ type: 'frame_ready' }, '*');
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error calling actions.ready():", error);
+        // Fallback: try SDK directly
+        try {
+          console.log("Trying sdk.actions.ready() as fallback");
+          sdk.actions.ready();
+        } catch (sdkError) {
+          console.error("SDK ready fallback failed:", sdkError);
+          // Final fallback: post message directly
+          if (typeof window !== 'undefined' && (window as any).parent) {
+            (window as any).parent.postMessage({ type: 'frame_ready' }, '*');
+          }
+        }
       }
     }
-  }, [context, isSDKLoaded, actions]);
+  }, [isSDKLoaded, actions]);
+
+  // Additional timeout-based ready call as final fallback
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (isSDKLoaded) {
+        console.log("Timeout-based ready call");
+        try {
+          if (actions?.ready) {
+            actions.ready();
+          } else {
+            sdk.actions.ready();
+          }
+        } catch (error) {
+          console.error("Timeout ready failed:", error);
+          // Final postMessage fallback
+          if (typeof window !== 'undefined' && (window as any).parent) {
+            (window as any).parent.postMessage({ type: 'frame_ready' }, '*');
+          }
+        }
+      }
+    }, 2000); // Wait 2 seconds then try again
+
+    return () => clearTimeout(timeoutId);
+  }, [isSDKLoaded, actions]);
 
   // Fetch Neynar user object when context is available
   useEffect(() => {
