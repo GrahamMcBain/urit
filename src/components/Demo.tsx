@@ -29,9 +29,16 @@ export default function Demo(
     console.log("context", context);
     console.log("actions", actions);
     
-    // The Neynar SDK automatically calls ready() when the handshake succeeds
-    // No manual ready() calls needed when manifest and headers are configured correctly
-  }, [isSDKLoaded, context, actions]);
+    // Call ready() when SDK is loaded and actions are available
+    if (isSDKLoaded && actions?.ready) {
+      console.log("Calling actions.ready()");
+      try {
+        actions.ready();
+      } catch (error) {
+        console.error("Error calling ready():", error);
+      }
+    }
+  }, [isSDKLoaded, actions]);
 
   // Fetch Neynar user object when context is available
   useEffect(() => {
