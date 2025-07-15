@@ -3,8 +3,8 @@
     "header": "farcaster-domain-verification",
     "payload": "playtag.xyz"
   },
-  "frame": {
-    "version": "1",
+  "miniapp": {
+    "version": "1.0.0",
     "name": "Tag",
     "icon_url": "https://playtag.xyz/icon.png",
     "home_url": "https://playtag.xyz",
