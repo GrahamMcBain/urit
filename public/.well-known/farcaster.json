@@ -1,0 +1,17 @@
+{
+  "account_association": {
+    "header": "farcaster-domain-verification",
+    "payload": "playtag.xyz"
+  },
+  "frame": {
+    "version": "1",
+    "name": "Tag",
+    "icon_url": "https://playtag.xyz/icon.png",
+    "home_url": "https://playtag.xyz",
+    "image_url": "https://playtag.xyz/api/opengraph-image",
+    "button_title": "Play Tag",
+    "splash_image_url": "https://playtag.xyz/splash.png",
+    "splash_background_color": "#0a0a0a",
+    "webhook_url": "https://playtag.xyz/api/webhook"
+  }
+}
