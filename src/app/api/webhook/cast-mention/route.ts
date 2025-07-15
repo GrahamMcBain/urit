@@ -7,8 +7,41 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Verify webhook signature if needed
-    // TODO: Add signature verification based on your webhook provider
+    // Verify webhook signature from Neynar
+    const signature = request.headers.get('X-Neynar-Signature');
+    const webhookSecret = process.env.NEYNAR_WEBHOOK_SECRET;
+    
+    if (!webhookSecret) {
+      console.error('NEYNAR_WEBHOOK_SECRET not configured');
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Webhook secret not configured' 
+      }, { status: 500 });
+    }
+    
+    if (!signature) {
+      console.error('Missing X-Neynar-Signature header');
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Missing signature' 
+      }, { status: 401 });
+    }
+    
+    // Verify the signature (basic implementation)
+    const bodyString = JSON.stringify(body);
+    const crypto = require('crypto');
+    const expectedSignature = crypto
+      .createHmac('sha256', webhookSecret)
+      .update(bodyString)
+      .digest('hex');
+    
+    if (signature !== expectedSignature && signature !== `sha256=${expectedSignature}`) {
+      console.error('Invalid webhook signature');
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Invalid signature' 
+      }, { status: 401 });
+    }
     
     // Handle different webhook formats
     let cast = null;
