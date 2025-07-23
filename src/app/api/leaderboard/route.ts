@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { gameService } from '@/lib/redis';
+import { gameService } from '~/lib/redis';
 
 export async function GET(request: NextRequest) {
   try {

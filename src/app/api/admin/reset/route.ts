@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { gameService } from '@/lib/redis';
-import { isSuperAdmin } from '@/lib/config';
-import { redis, REDIS_KEYS } from '@/lib/redis';
+import { gameService, redis } from '~/lib/redis';
+import { isSuperAdmin } from '~/lib/config';
+import { REDIS_KEYS } from '~/lib/types';
 
 export async function POST(request: NextRequest) {
   try {

@@ -2,12 +2,12 @@ import { Redis } from '@upstash/redis';
 import { Player, GameState, LeaderboardEntry, TagEvent, REDIS_KEYS } from './types';
 
 if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-  throw new Error('Missing Upstash Redis credentials');
+  console.warn('Missing Upstash Redis credentials - some features may not work');
 }
 
 export const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  url: process.env.UPSTASH_REDIS_REST_URL || 'http://localhost:6379',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || 'dummy_token',
 });
 
 // Calculate points based on how long someone was tagged
