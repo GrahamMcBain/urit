@@ -120,19 +120,22 @@ export async function getFarcasterMetadata(): Promise<MiniAppManifest> {
   }
 
   return {
-    accountAssociation,
-    frame: {
-      version: "1",
+    account_association: accountAssociation || {
+      header: "farcaster-domain-verification",
+      payload: new URL(APP_URL).hostname
+    },
+    miniapp: {
+      version: "1.0.0",
       name: APP_NAME ?? "Tag Game",
-      iconUrl: APP_ICON_URL,
-      homeUrl: APP_URL,
-      imageUrl: APP_OG_IMAGE_URL,
-      buttonTitle: APP_BUTTON_TEXT ?? "Launch Mini App",
-      splashImageUrl: APP_SPLASH_URL,
-      splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
-      webhookUrl: APP_WEBHOOK_URL,
+      icon_url: APP_ICON_URL,
+      home_url: APP_URL,
+      image_url: APP_OG_IMAGE_URL,
+      button_title: APP_BUTTON_TEXT ?? "Launch Mini App",
+      splash_image_url: APP_SPLASH_URL,
+      splash_background_color: APP_SPLASH_BACKGROUND_COLOR,
+      webhook_url: APP_WEBHOOK_URL,
       description: APP_DESCRIPTION,
-      primaryCategory: APP_PRIMARY_CATEGORY,
+      primary_category: APP_PRIMARY_CATEGORY,
       tags: APP_TAGS,
     },
   };
