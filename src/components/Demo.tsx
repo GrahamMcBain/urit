@@ -29,8 +29,8 @@ export default function Demo(
     console.log("context", context);
     console.log("actions", actions);
     
-    // Call ready() when SDK is loaded, context is available, and actions are ready
-    if (isSDKLoaded && context && actions?.ready) {
+    // Call ready() when SDK is loaded and actions are ready
+    if (isSDKLoaded && actions?.ready) {
       console.log("Calling actions.ready()");
       try {
         actions.ready();
