@@ -25,20 +25,29 @@ export default function Demo(
   const [neynarUser, setNeynarUser] = useState<NeynarUser | null>(null);
 
   useEffect(() => {
-    console.log("isSDKLoaded", isSDKLoaded);
-    console.log("context", context);
-    console.log("actions", actions);
+    console.log("=== SDK State Debug ===");
+    console.log("isSDKLoaded:", isSDKLoaded);
+    console.log("context:", context);
+    console.log("actions:", actions);
+    console.log("actions?.ready:", actions?.ready);
+    console.log("Condition check:", isSDKLoaded && actions?.ready);
     
     // Call ready() when SDK is loaded and actions are ready
     if (isSDKLoaded && actions?.ready) {
-      console.log("Calling actions.ready()");
+      console.log("✅ Calling actions.ready()");
       try {
         actions.ready();
+        console.log("✅ actions.ready() called successfully");
       } catch (error) {
-        console.error("Error calling ready():", error);
+        console.error("❌ Error calling ready():", error);
       }
+    } else {
+      console.log("❌ Not calling ready() - conditions not met");
+      console.log("  isSDKLoaded:", isSDKLoaded);
+      console.log("  actions?.ready exists:", !!actions?.ready);
     }
-  }, [isSDKLoaded, actions]);
+    console.log("=== End Debug ===");
+  }, [isSDKLoaded, actions, context]);
 
   // Fetch Neynar user object when context is available
   useEffect(() => {
