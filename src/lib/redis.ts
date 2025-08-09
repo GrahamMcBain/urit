@@ -1,14 +1,50 @@
 import { Redis } from '@upstash/redis';
 import { Player, GameState, LeaderboardEntry, TagEvent, REDIS_KEYS } from './types';
 
-if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) {
-  console.warn('Missing Upstash Redis credentials - some features may not work');
+// Minimal in-memory Redis-like shim when Upstash credentials are missing
+class InMemoryRedis {
+  private store = new Map<string, unknown>();
+  private lists = new Map<string, unknown[]>();
+  private sets = new Map<string, Set<string>>();
+
+  async get<T>(key: string): Promise<T | null> {
+    return (this.store.has(key) ? (this.store.get(key) as T) : null);
+  }
+  async set(key: string, value: unknown): Promise<void> {
+    this.store.set(key, value);
+  }
+  async del(key: string): Promise<void> {
+    this.store.delete(key);
+    this.lists.delete(key);
+    this.sets.delete(key);
+  }
+  async keys(pattern: string): Promise<string[]> {
+    const regex = new RegExp('^' + pattern.replace('*', '.*') + '$');
+    return Array.from(this.store.keys()).filter(k => regex.test(k));
+  }
+  async lpush(key: string, value: unknown): Promise<void> {
+    const list = (this.lists.get(key) ?? []) as unknown[];
+    list.unshift(value);
+    this.lists.set(key, list);
+  }
+  async lrange<T>(key: string, start: number, stop: number): Promise<T[]> {
+    const list = (this.lists.get(key) ?? []) as T[];
+    return list.slice(start, stop + 1);
+  }
+  async sadd(key: string, member: string): Promise<void> {
+    const set = this.sets.get(key) ?? new Set<string>();
+    set.add(member);
+    this.sets.set(key, set);
+  }
+  async smembers(key: string): Promise<string[]> {
+    return Array.from(this.sets.get(key) ?? new Set<string>());
+  }
 }
 
-export const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || 'http://localhost:6379',
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || 'dummy_token',
-});
+const hasUpstash = !!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
+export const redis: Redis | InMemoryRedis = hasUpstash
+  ? new Redis({ url: process.env.UPSTASH_REDIS_REST_URL!, token: process.env.UPSTASH_REDIS_REST_TOKEN! })
+  : new InMemoryRedis();
 
 // Calculate points based on how long someone was tagged
 function calculatePoints(durationMs: number): number {
@@ -64,6 +100,9 @@ export class GameService {
     };
 
     await redis.set(REDIS_KEYS.PLAYER(player.fid), player);
+    // Track in a set to avoid KEYS scan
+    type SetOps = { sadd: (key: string, member: string) => Promise<void> };
+    await (redis as SetOps).sadd('players:set', REDIS_KEYS.PLAYER(player.fid));
     return player;
   }
 
@@ -218,7 +257,9 @@ export class GameService {
   // Leaderboard
   async getLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
     // Get all players
-    const keys = await redis.keys(REDIS_KEYS.PLAYER('*'));
+    // Use set membership to list players
+    type SetOps = { smembers: (key: string) => Promise<string[]> };
+    const keys = await (redis as SetOps).smembers('players:set');
     const players: Player[] = [];
     
     for (const key of keys) {

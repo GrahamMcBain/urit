@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json(
     { error: 'Auth temporarily disabled' },
     { status: 503 }
   );
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   return NextResponse.json(
     { error: 'Auth temporarily disabled' },
     { status: 503 }

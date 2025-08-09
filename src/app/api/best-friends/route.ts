@@ -20,22 +20,21 @@ export async function GET(request: Request) {
   }
 
   try {
-    const response = await fetch(
-      `https://api.neynar.com/v2/farcaster/user/best_friends?fid=${fid}&limit=3`,
+    // Use REST endpoint for best friends; Neynar SDK doesn't expose this
+    const resp = await fetch(
+      `https://api.neynar.com/v2/farcaster/user/best_friends?fid=${encodeURIComponent(fid)}&limit=3`,
       {
         headers: {
-          "x-api-key": apiKey,
+          'x-api-key': apiKey,
+          'accept': 'application/json',
         },
       }
     );
-
-    if (!response.ok) {
-      throw new Error(`Neynar API error: ${response.statusText}`);
+    if (!resp.ok) {
+      throw new Error(`Neynar API error: ${resp.status}`);
     }
-
-    const { users } = await response.json() as { users: { user: { fid: number; username: string } }[] };
-
-    return NextResponse.json({ bestFriends: users });
+    const data: { users: { user: { fid: number; username: string } }[] } = await resp.json();
+    return NextResponse.json({ bestFriends: data.users });
   } catch (error) {
     console.error('Failed to fetch best friends:', error);
     return NextResponse.json(

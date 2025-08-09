@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { gameService } from '~/lib/redis';
-import { getNeynarClient } from '~/lib/neynar';
+
 
 export async function POST(request: NextRequest) {
   try {

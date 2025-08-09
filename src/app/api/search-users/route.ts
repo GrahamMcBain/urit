@@ -9,31 +9,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ users: [] });
     }
 
-    // Use Neynar API to search for users
-    const response = await fetch(
-      `https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(query)}&limit=10`,
-      {
-        headers: {
-          'Accept': 'application/json',
-          'api_key': process.env.NEYNAR_API_KEY || '',
-        },
-      }
-    );
+        // Use Neynar SDK to search for users
+    const { getNeynarClient } = await import('~/lib/neynar');
+    const client = getNeynarClient();
+    const data = await client.searchUser({ q: query, limit: 10 });
 
-    if (!response.ok) {
-      throw new Error(`Neynar API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
     // Transform the response to a simpler format
-    const users = data.result?.users?.map((user: {
-      fid: number;
-      username: string;
-      display_name: string;
-      pfp_url?: string;
-      follower_count?: number;
-    }) => ({
+    type SearchedUser = { fid: number; username: string; display_name: string; pfp_url?: string; follower_count?: number };
+    const users = (data.result?.users as SearchedUser[] | undefined)?.map((user) => ({
       fid: user.fid,
       username: user.username,
       display_name: user.display_name,

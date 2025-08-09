@@ -9,5 +9,5 @@ export const GAME_CONFIG = {
 } as const;
 
 export function isSuperAdmin(fid: number): boolean {
-  return GAME_CONFIG.SUPER_ADMIN_FIDS.includes(fid);
+  return (GAME_CONFIG.SUPER_ADMIN_FIDS as readonly number[]).includes(fid);
 }

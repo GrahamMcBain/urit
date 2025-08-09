@@ -4,29 +4,27 @@ import { mnemonicToAccount } from 'viem/accounts';
 import { APP_BUTTON_TEXT, APP_DESCRIPTION, APP_ICON_URL, APP_NAME, APP_OG_IMAGE_URL, APP_PRIMARY_CATEGORY, APP_SPLASH_BACKGROUND_COLOR, APP_TAGS, APP_URL, APP_WEBHOOK_URL } from './constants';
 import { APP_SPLASH_URL } from './constants';
 
-interface MiniAppMetadata {
-  version: string;
-  name: string;
-  iconUrl: string;
-  homeUrl: string;
-  imageUrl?: string;
-  buttonTitle?: string;
-  splashImageUrl?: string;
-  splashBackgroundColor?: string;
-  webhookUrl?: string;
-  description?: string;
-  primaryCategory?: string;
-  tags?: string[];
-};
-
-interface MiniAppManifest {
-  accountAssociation?: {
+type MiniAppManifest = {
+  account_association?: {
     header: string;
     payload: string;
-    signature: string;
+    signature?: string;
   };
-  frame: MiniAppMetadata;
-}
+  miniapp: {
+    version: string;
+    name: string;
+    icon_url: string;
+    home_url: string;
+    image_url?: string;
+    button_title?: string;
+    splash_image_url?: string;
+    splash_background_color?: string;
+    webhook_url?: string;
+    description?: string;
+    primary_category?: string;
+    tags?: string[];
+  };
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { gameService } from '~/lib/redis';
 import { getNeynarClient } from '~/lib/neynar';
+import crypto from 'crypto';
 
 // Webhook to handle cast mentions of @tag
 export async function POST(request: NextRequest) {
@@ -29,7 +30,6 @@ export async function POST(request: NextRequest) {
     
     // Verify the signature (basic implementation)
     const bodyString = JSON.stringify(body);
-    const crypto = require('crypto');
     const expectedSignature = crypto
       .createHmac('sha256', webhookSecret)
       .update(bodyString)

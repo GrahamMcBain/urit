@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Test endpoint for cast mention webhook
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({
     status: 'healthy',
     endpoint: '/api/webhook/cast-mention',

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
 import TagGame from "./TagGame";
 import { Header } from "./ui/Header";
@@ -11,6 +11,9 @@ export type Tab = 'home' | 'actions' | 'context' | 'wallet';
 interface NeynarUser {
   fid: number;
   score: number;
+  username?: string;
+  display_name?: string;
+  pfp_url?: string;
 }
 
 export default function Demo(

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import { useMiniApp } from "@neynar/react";
 import { Button } from "./ui/Button";
 import { Player, LeaderboardEntry } from "../lib/types";
@@ -213,21 +214,18 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
         await fetchLeaderboard();
         
         // Send notification to tagged user (if they have the app)
-        if (actions.sendNotification) {
-          actions.sendNotification({
-            title: "You've been tagged!",
+        if ('sendNotification' in actions) {
+          type NotifActions = { sendNotification: (opts: { title: string; body: string; targetUrl?: string }) => Promise<void> };
+          await (actions as unknown as NotifActions).sendNotification({
+            title: "You\'ve been tagged!",
             body: "Quick! Tag someone else before too much time passes!",
             targetUrl: `${process.env.NEXT_PUBLIC_URL}`,
           });
         }
         
         // Compose a cast to share the tag
-        if (actions.openComposer) {
-          const castText = `I just tagged @${selectedUser.username} in Tag! 🫱\n\nYour turn to tag someone else quickly! ⚡\n\nPlay at ${process.env.NEXT_PUBLIC_URL}`;
-          actions.openComposer({
-            text: castText,
-          });
-        }
+        const castText = `I just tagged @${selectedUser.username} in Tag! 🫱\n\nYour turn to tag someone else quickly! ⚡\n\nPlay at ${process.env.NEXT_PUBLIC_URL}`;
+        await actions.composeCast({ text: castText }, 'tag-game');
       } else {
         setMessage(data.error || "Failed to tag friend");
       }
@@ -263,12 +261,16 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
   return (
     <div className="max-w-md mx-auto p-4 space-y-6">
       <div className="flex items-center justify-center gap-3 mb-2">
-        <img 
+        <Image 
           src="/icon.png" 
           alt="Tag Logo" 
-          className="w-12 h-12"
+          width={48}
+          height={48}
+          className="rounded"
         />
-        <h1 className="text-3xl font-bold">{title}</h1>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+          {title}
+        </h1>
       </div>
       
       {/* API Error Display */}
@@ -315,10 +317,10 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
                   disabled={loading}
                   className="w-full bg-red-600 hover:bg-red-700 text-white"
                 >
-                  Reset Game (Clear "It" Status)
+                  Reset Game (Clear &quot;It&quot; Status)
                 </Button>
                 <p className="text-xs text-red-700 dark:text-red-300">
-                  You can tag anyone even if you're not "it"
+                  You can tag anyone even if you&apos;re not &quot;it&quot;
                 </p>
               </div>
             </div>
@@ -335,7 +337,7 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
                 </p>
                 {isCurrentUserTagged && (
                   <p className="text-red-600 font-medium mt-2">
-                    You're it! Tag someone else quickly!
+                    You&apos;re it! Tag someone else quickly!
                   </p>
                 )}
               </div>
@@ -377,10 +379,13 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
                   <div className="bg-primary-50 dark:bg-primary-900 rounded-lg p-3 border-2 border-primary-300">
                     <div className="flex items-center space-x-3">
                       {selectedUser.pfp_url && (
-                        <img 
+                        <Image 
                           src={selectedUser.pfp_url} 
                           alt={selectedUser.display_name}
-                          className="w-10 h-10 rounded-full"
+                          width={40}
+                          height={40}
+                          unoptimized
+                          className="rounded-full"
                         />
                       )}
                       <div className="flex-1">
@@ -413,10 +418,13 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
                         className="w-full flex items-center space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-600 last:border-b-0"
                       >
                         {user.pfp_url && (
-                          <img 
+                          <Image 
                             src={user.pfp_url} 
                             alt={user.display_name}
-                            className="w-8 h-8 rounded-full"
+                            width={32}
+                            height={32}
+                            unoptimized
+                            className="rounded-full"
                           />
                         )}
                         <div className="flex-1 text-left">
@@ -434,7 +442,7 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
                 {/* No results */}
                 {searchQuery && !selectedUser && !isSearching && searchResults.length === 0 && (
                   <div className="text-center text-gray-500 py-4">
-                    No users found for "{searchQuery}"
+                    No users found for &quot;{searchQuery}&quot;
                   </div>
                 )}
               </div>
@@ -473,13 +481,13 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
           <div className="bg-primary-50 dark:bg-primary-900 rounded-lg p-4">
             <h3 className="font-bold text-primary-900 dark:text-primary-100 mb-2">How to Play:</h3>
             <ul className="text-sm text-primary-800 dark:text-primary-200 space-y-1">
-              <li>• When you're tagged, you must tag someone else quickly</li>
-              <li>• Tag people in this app OR by casting "@tag @username" on Farcaster</li>
+              <li>• When you&apos;re tagged, you must tag someone else quickly</li>
+              <li>• Tag people in this app OR by casting &quot;@tag @username&quot; on Farcaster</li>
               <li>• Only the currently tagged person can tag others</li>
               <li>• You can only tag a person once per 24-hour period</li>
               <li>• The game resets every 24 hours</li>
               <li>• The goal is to spend the least time being tagged</li>
-              <li>• Check the leaderboard to see who's winning!</li>
+              <li>• Check the leaderboard to see who&apos;s winning!</li>
             </ul>
           </div>
         </div>

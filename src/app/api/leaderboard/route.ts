@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { gameService } from '~/lib/redis';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Check if game should be reset (24 hour cycle)
     await gameService.checkAndResetGame();
