@@ -7,6 +7,7 @@ import { Button } from "./ui/Button";
 import { Player, LeaderboardEntry } from "../lib/types";
 import { isSuperAdmin } from "../lib/config";
 
+
 interface TagGameProps {
   title?: string;
 }
@@ -234,6 +235,14 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
       setMessage("Failed to tag friend");
     } finally {
       setLoading(false);
+      // Best-effort haptics using Mini App SDK when available at runtime
+      try {
+        const mod = await (new Function('u', 'return import(u)'))('https://esm.sh/@farcaster/miniapp-sdk');
+        const caps = await mod.sdk.getCapabilities();
+        if (caps.includes('haptics.impactOccurred')) {
+          await mod.sdk.haptics.impactOccurred('medium');
+        }
+      } catch {}
     }
   }, [context, actions, selectedUser, fetchGameState, fetchLeaderboard]);
 
@@ -515,37 +524,45 @@ export default function TagGame({ title = "Tag" }: TagGameProps) {
             </div>
           ) : (
             <div className="space-y-2">
-              {leaderboard.map((entry, index) => (
-                <div
-                  key={entry.fid}
-                  className={`flex items-center justify-between p-3 rounded-lg ${
-                    index === 0
-                      ? 'bg-yellow-100 dark:bg-yellow-900 border-2 border-yellow-300'
-                      : 'bg-gray-100 dark:bg-gray-800'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+              {(() => {
+                const maxDaily = Math.max(...leaderboard.map(e => e.dailyPoints || 0), 1);
+                return leaderboard.map((entry, index) => (
+                  <div
+                    key={entry.fid}
+                    className={`p-3 rounded-xl border transition transform hover:scale-[1.01] ${
                       index === 0
-                        ? 'bg-yellow-500 text-white'
-                        : 'bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300'
-                    }`}>
-                      {index + 1}
+                        ? 'bg-yellow-100/70 dark:bg-yellow-900/40 border-yellow-300'
+                        : index === 1
+                        ? 'bg-gray-100/80 dark:bg-gray-800/60 border-gray-300/50'
+                        : 'bg-gray-50 dark:bg-gray-800/40 border-gray-200/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold shadow ${
+                          index === 0 ? 'bg-yellow-500 text-white' : index === 1 ? 'bg-gray-400 text-white' : 'bg-amber-700 text-white'
+                        }`}>
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="font-medium">{entry.displayName}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">@{entry.username}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold">{(entry.dailyPoints || 0).toLocaleString()}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400">today</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium">{entry.displayName}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        Daily: {(entry.dailyPoints || 0).toLocaleString()} | 
-                        Total: {(entry.totalPoints || 0).toLocaleString()}
-                      </p>
+                    <div className="mt-2 h-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary-500 rounded-full transition-all duration-700 ease-out"
+                        style={{ width: `${Math.max(6, Math.round(((entry.dailyPoints || 0) / maxDaily) * 100))}%` }}
+                      />
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="font-bold">{(entry.dailyPoints || 0).toLocaleString()}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">today</p>
-                  </div>
-                </div>
-              ))}
+                ));
+              })()}
             </div>
           )}
         </div>

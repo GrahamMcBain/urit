@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
-import { sdk } from "@farcaster/miniapp-sdk";
+
 import TagGame from "./TagGame";
 import { Header } from "./ui/Header";
 import { Footer } from "./ui/Footer";
@@ -32,18 +32,30 @@ export default function Demo(
     // Call ready() via either provider's actions or the official miniapp SDK
     (async () => {
       try {
-        if (isSDKLoaded && actions?.ready) {
-          await actions.ready();
-          return;
+        // Retry calling ready() via Neynar actions if available
+        if (actions?.ready) {
+          const start = Date.now();
+          while (Date.now() - start < 5000) {
+            try {
+              await actions.ready();
+              break;
+            } catch {}
+            await new Promise(r => setTimeout(r, 200));
+          }
         }
-        // Fallback: detect Mini App and call ready from official SDK
-        const inMini = await sdk.isInMiniApp();
-        if (inMini) {
-          await sdk.actions.ready();
-        }
+        // Best-effort: dynamically import Mini App SDK at runtime (browser) for back/ready
+        try {
+          // avoid bundler: dynamic import by function constructor
+          const mod = await (new Function('u', 'return import(u)'))('https://esm.sh/@farcaster/miniapp-sdk');
+          if (mod?.sdk?.actions?.ready) {
+            await mod.sdk.actions.ready();
+          }
+          if (mod?.sdk?.back?.enableWebNavigation) {
+            await mod.sdk.back.enableWebNavigation();
+          }
+        } catch {}
       } catch (err) {
-        // Swallow errors; preview tool offers a manual hide as well
-        console.debug('ready() call failed:', err);
+        console.debug('ready()/back setup failed:', err);
       }
     })();
   }, [isSDKLoaded, actions]);
