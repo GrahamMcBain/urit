@@ -5,25 +5,27 @@ import { APP_BUTTON_TEXT, APP_DESCRIPTION, APP_ICON_URL, APP_NAME, APP_OG_IMAGE_
 import { APP_SPLASH_URL } from './constants';
 
 type MiniAppManifest = {
-  account_association?: {
+  accountAssociation?: {
     header: string;
     payload: string;
     signature?: string;
   };
+  // Prefer "miniapp" but also include "frame" for backward compatibility
   miniapp: {
     version: string;
     name: string;
-    icon_url: string;
-    home_url: string;
-    image_url?: string;
-    button_title?: string;
-    splash_image_url?: string;
-    splash_background_color?: string;
-    webhook_url?: string;
+    iconUrl: string;
+    homeUrl: string;
+    imageUrl?: string;
+    buttonTitle?: string;
+    splashImageUrl?: string;
+    splashBackgroundColor?: string;
+    webhookUrl?: string;
     description?: string;
-    primary_category?: string;
+    primaryCategory?: string;
     tags?: string[];
   };
+  frame?: MiniAppManifest['miniapp'];
 };
 
 export function cn(...inputs: ClassValue[]) {
@@ -89,52 +91,52 @@ export async function getFarcasterMetadata(): Promise<MiniAppManifest> {
 
   let accountAssociation;
   if (secretEnvVars) {
-    // Generate account from seed phrase
-    const account = mnemonicToAccount(secretEnvVars.seedPhrase);
-    const custodyAddress = account.address;
+  // Generate account from seed phrase
+  const account = mnemonicToAccount(secretEnvVars.seedPhrase);
+  const custodyAddress = account.address;
 
-    const header = {
-      fid: parseInt(secretEnvVars.fid),
-      type: 'custody',
-      key: custodyAddress,
-    };
-    const encodedHeader = Buffer.from(JSON.stringify(header), 'utf-8').toString('base64');
+  const header = {
+  fid: parseInt(secretEnvVars.fid),
+  type: 'custody',
+  key: custodyAddress,
+  };
+  const encodedHeader = Buffer.from(JSON.stringify(header), 'utf-8').toString('base64');
 
-    const payload = {
-      domain
-    };
-    const encodedPayload = Buffer.from(JSON.stringify(payload), 'utf-8').toString('base64url');
+  const payload = {
+  domain
+  };
+  const encodedPayload = Buffer.from(JSON.stringify(payload), 'utf-8').toString('base64url');
 
-    const signature = await account.signMessage({ 
-      message: `${encodedHeader}.${encodedPayload}`
-    });
-    const encodedSignature = Buffer.from(signature, 'utf-8').toString('base64url');
+  const signature = await account.signMessage({ 
+  message: `${encodedHeader}.${encodedPayload}`
+  });
+  const encodedSignature = Buffer.from(signature, 'utf-8').toString('base64url');
 
-    accountAssociation = {
-      header: encodedHeader,
-      payload: encodedPayload,
-      signature: encodedSignature
-    };
+  accountAssociation = {
+  header: encodedHeader,
+  payload: encodedPayload,
+  signature: encodedSignature
+  };
   }
+  
+  const base = {
+  version: "1",
+  name: APP_NAME ?? "Tag Game",
+  iconUrl: APP_ICON_URL,
+  homeUrl: APP_URL,
+  imageUrl: APP_OG_IMAGE_URL,
+  buttonTitle: APP_BUTTON_TEXT ?? "Launch Mini App",
+  splashImageUrl: APP_SPLASH_URL,
+  splashBackgroundColor: APP_SPLASH_BACKGROUND_COLOR,
+  webhookUrl: APP_WEBHOOK_URL,
+  description: APP_DESCRIPTION,
+  primaryCategory: APP_PRIMARY_CATEGORY,
+  tags: APP_TAGS,
+  };
 
   return {
-    account_association: accountAssociation || {
-      header: "farcaster-domain-verification",
-      payload: new URL(APP_URL).hostname
-    },
-    miniapp: {
-      version: "1.0.0",
-      name: APP_NAME ?? "Tag Game",
-      icon_url: APP_ICON_URL,
-      home_url: APP_URL,
-      image_url: APP_OG_IMAGE_URL,
-      button_title: APP_BUTTON_TEXT ?? "Launch Mini App",
-      splash_image_url: APP_SPLASH_URL,
-      splash_background_color: APP_SPLASH_BACKGROUND_COLOR,
-      webhook_url: APP_WEBHOOK_URL,
-      description: APP_DESCRIPTION,
-      primary_category: APP_PRIMARY_CATEGORY,
-      tags: APP_TAGS,
-    },
+    accountAssociation: accountAssociation,
+    miniapp: base,
+    frame: base,
   };
 }
