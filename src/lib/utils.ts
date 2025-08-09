@@ -43,12 +43,12 @@ export function getSecretEnvVars() {
 
 export function getMiniAppEmbedMetadata(ogImageUrl?: string) {
   return {
-    version: "next",
+    version: "1",
     imageUrl: ogImageUrl ?? APP_OG_IMAGE_URL,
     button: {
       title: APP_BUTTON_TEXT,
       action: {
-        type: "launch_frame",
+        type: "launch_miniapp",
         name: `Tag`,
         url: APP_URL,
         splashImageUrl: APP_SPLASH_URL,

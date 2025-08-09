@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useMiniApp } from "@neynar/react";
+import { sdk } from "@farcaster/miniapp-sdk";
 import TagGame from "./TagGame";
 import { Header } from "./ui/Header";
 import { Footer } from "./ui/Footer";
@@ -28,29 +29,24 @@ export default function Demo(
   const [neynarUser, setNeynarUser] = useState<NeynarUser | null>(null);
 
   useEffect(() => {
-    console.log("=== SDK State Debug ===");
-    console.log("isSDKLoaded:", isSDKLoaded);
-    console.log("context:", context);
-    console.log("actions:", actions);
-    console.log("actions?.ready:", actions?.ready);
-    console.log("Condition check:", isSDKLoaded && actions?.ready);
-    
-    // Call ready() when SDK is loaded and actions are ready
-    if (isSDKLoaded && actions?.ready) {
-      console.log("✅ Calling actions.ready()");
+    // Call ready() via either provider's actions or the official miniapp SDK
+    (async () => {
       try {
-        actions.ready();
-        console.log("✅ actions.ready() called successfully");
-      } catch (error) {
-        console.error("❌ Error calling ready():", error);
+        if (isSDKLoaded && actions?.ready) {
+          await actions.ready();
+          return;
+        }
+        // Fallback: detect Mini App and call ready from official SDK
+        const inMini = await sdk.isInMiniApp();
+        if (inMini) {
+          await sdk.actions.ready();
+        }
+      } catch (err) {
+        // Swallow errors; preview tool offers a manual hide as well
+        console.debug('ready() call failed:', err);
       }
-    } else {
-      console.log("❌ Not calling ready() - conditions not met");
-      console.log("  isSDKLoaded:", isSDKLoaded);
-      console.log("  actions?.ready exists:", !!actions?.ready);
-    }
-    console.log("=== End Debug ===");
-  }, [isSDKLoaded, actions, context]);
+    })();
+  }, [isSDKLoaded, actions]);
 
   // Fetch Neynar user object when context is available
   useEffect(() => {
